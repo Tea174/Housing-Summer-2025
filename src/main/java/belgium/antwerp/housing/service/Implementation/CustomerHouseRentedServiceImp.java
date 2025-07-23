@@ -30,17 +30,17 @@ public class CustomerHouseRentedServiceImp implements CustomerHouseRentedService
         return customerHouseRentedRepo.getCustomersByHouseRented(houseId);
     }
 
+    @Transactional
     @Override
     public Set<AppUser> getCustomersByHouseOwner(int ownerId) {
         logger.info("Getting customers by house with id: " + ownerId);
         List<House> houses = ownerHouseService.getHousesOwnedByOwner(ownerId);
         //Initialize a list to store the customers, use set as it will save unique value, treeset with compare will sort by ID
         Set<AppUser> customers = new TreeSet<>(Comparator.comparingInt(AppUser::getId));
-        for(int i = 0; i < houses.size(); i++) {
-            for(int j = 0; j < houses.get(i).getCustomerHouseRented().size(); j++) {
-                customers.add(houses.get(i).getCustomerHouseRented().get(j).getAppUser());
-            }
-        }
+       for(House house : houses){
+           List<AppUser> customerList = customerHouseRentedRepo.getCustomersByHouseRented(house.getId());
+           customers.addAll(customerList);
+       }
         return customers;
     }
 }
