@@ -11,6 +11,7 @@ public interface CustomerHouseRentedService {
     Optional<House> getHousesRentedByCustomer(final int customerId);
     List<AppUser> getCustomerbyHouse (final int ownerId);
     Set<AppUser> getCustomersByHouseOwner(int ownerId);
+
 }
 
 

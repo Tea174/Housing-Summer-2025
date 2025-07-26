@@ -1,11 +1,28 @@
 
 
-
 ###
-GET http://localhost:8080/api/owner/2
+GET http://localhost:8080/api/appUser/owner/2
 Accept: application/json
 
 
 ###
 GET http://localhost:8080/api/houses/byOwner/3
 Accept: application/json
+
+###
+GET http://localhost:8080/api/appUser/allAppUsers
+Accept: application/json
+
+###
+GET http://localhost:8080/api/appUser/allAppUsers
+Accept: application/json
+
+
+###
+PATCH http://localhost:8080/api/appUser/5
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "fas"
+}

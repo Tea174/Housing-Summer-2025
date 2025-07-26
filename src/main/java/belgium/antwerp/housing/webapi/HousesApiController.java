@@ -1,7 +1,7 @@
 package belgium.antwerp.housing.webapi;
 
 import belgium.antwerp.housing.service.OwnerHouseService;
-import belgium.antwerp.housing.webapi.dto.HouseDto;
+import belgium.antwerp.housing.webapi.dto.response.HouseDto;
 import belgium.antwerp.housing.webapi.dto.HouseMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
