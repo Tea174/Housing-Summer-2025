@@ -7,10 +7,8 @@ public class NotFoundException extends RuntimeException {
     public static NotFoundException forHouse(final int houseId){
         return new NotFoundException("House with id " + houseId + " not found");
     }
-    public static NotFoundException forCustomer(final int customerId){
-        return new NotFoundException("Customer with id " + customerId + " not found");
+    public static NotFoundException forAppUser(final int appUserId){
+        return new NotFoundException("AppUser with id " + appUserId + " not found");
     }
-    public static NotFoundException forOwner(final int ownerId){
-        return new NotFoundException("Owner with id " + ownerId + " not found");
-    }
+
 }

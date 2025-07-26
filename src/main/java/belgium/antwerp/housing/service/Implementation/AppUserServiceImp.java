@@ -2,14 +2,17 @@ package belgium.antwerp.housing.service.Implementation;
 
 import belgium.antwerp.housing.domain.AppUser;
 import belgium.antwerp.housing.domain.Role;
+import belgium.antwerp.housing.domain.exception.NotFoundException;
 import belgium.antwerp.housing.repository.AppUserRepo;
+import belgium.antwerp.housing.repository.CustomerHouseRentedRepo;
+import belgium.antwerp.housing.repository.OwnerHouseRepo;
 import belgium.antwerp.housing.service.AppUserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -17,30 +20,48 @@ import java.util.logging.Logger;
 @AllArgsConstructor
 public class AppUserServiceImp implements AppUserService {
     private final AppUserRepo appUserRepo;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final OwnerHouseRepo ownerHouseRepo;
+    private final CustomerHouseRentedRepo customerHouseRentedRepo;
     private final Logger logger = Logger.getLogger(AppUserServiceImp.class.getName());
 
     @Override
-    public Optional<List<AppUser>> getCustomers(final String role) {
-        logger.info("Getting customers with role: " + role);
-        Role roleEnum = Role.valueOf(role.toUpperCase());
-        Optional<List<AppUser>> customers = appUserRepo.getAppUsers(roleEnum);
-        // if the customer does not exist, call 2nd function
-        customers.ifPresentOrElse(
-                customerList -> customerList.forEach(customer -> System.out.println(customer.getName())),
-                () -> System.out.println("No customers found")
-        );
-        return customers;
+    public List<AppUser> getAppUsers() {
+        logger.info("Getting all app users");
+       return appUserRepo.findAll();
+
     }
 
     @Override
-    public Optional<List<AppUser>> getOwners(final String role) {
-        logger.info("Getting owners with role: " + role);
-        Role roleEnum = Role.valueOf(role.toUpperCase());
-        Optional<List<AppUser>> owners = appUserRepo.getAppUsers(roleEnum);
-        owners.ifPresentOrElse(
-                ownerList -> ownerList.forEach(owner ->  System.out.println(owner.getName())),
-                () -> System.out.println("No owners found")
-        );
-        return owners;
+    public AppUser addAppUser(final String email,
+                              final String name,
+                              final String password,
+                              final Role role) {
+        final AppUser appUser = new AppUser();
+        appUser.setEmail(email);
+        appUser.setName(name);
+        appUser.setPassword(bCryptPasswordEncoder.encode(password));
+        appUser.setRole(role);
+        return appUserRepo.save(appUser);
+    }
+
+    @Override
+    public AppUser patchAppUser(final int id, final String name){
+        final AppUser appUser = appUserRepo.findById(id).orElseThrow(() -> NotFoundException.forAppUser(id));
+        if(name != null){
+            appUser.setName(name);
+        }
+        return appUser;
+    }
+
+    @Override
+    public void removeAppUser(final int id){
+        final AppUser appUser = appUserRepo.findById(id).orElseThrow(() -> NotFoundException.forAppUser(id));
+        if(appUser.getRole() == Role.OWNER){
+            ownerHouseRepo.deleteAll(appUser.getOwnerHouses());
+        } else if (appUser.getRole() == Role.CUSTOMER) {
+            customerHouseRentedRepo.deleteAll(appUser.getCustomerHouseRented());
+        }
+        appUserRepo.delete(appUser);
     }
 }

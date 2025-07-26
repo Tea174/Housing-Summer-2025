@@ -6,10 +6,12 @@ import belgium.antwerp.housing.domain.House;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface CustomerHouseRentedRepo extends JpaRepository<CustomerHouseRented, Integer> {
     @Query("""
     FROM AppUser a
@@ -19,20 +21,11 @@ public interface CustomerHouseRentedRepo extends JpaRepository<CustomerHouseRent
 """)
     Optional<House> getHousesRentedByCustomer(@Param("id") int id);
     @Query("""
-FROM House h
-LEFT JOIN FETCH h.customerHouseRented ch
-LEFT JOIN FETCH ch.appUser
+SELECT a FROM AppUser a
+LEFT JOIN FETCH a.customerHouseRented ch
+LEFT JOIN FETCH ch.house h
 WHERE h.id = :id
 """)
     List<AppUser> getCustomersByHouseRented(@Param("id") int id);
 
-    @Query("""
-From AppUser a 
-LEFT JOIN FETCH a.ownerHouses oh
-LEFT JOIN FETCH oh.house h 
-LEFT JOIN FETCH h.customerHouseRented ch 
-LEFT JOIN FETCH ch.appUser 
-WHERE a.id = :id
-""")
-    List<AppUser> getCustomerbyHouseOwner(@Param("id") int id);
 }
