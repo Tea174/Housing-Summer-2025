@@ -14,12 +14,12 @@ import java.util.Optional;
 @Repository
 public interface CustomerHouseRentedRepo extends JpaRepository<CustomerHouseRented, Integer> {
     @Query("""
-    FROM AppUser a
-    LEFT JOIN FETCH  a.customerHouseRented ch
-    LEFT JOIN FETCH  ch.house
-    WHERE a.id = :id
+    FROM House h
+    LEFT JOIN FETCH  h.customerHouseRented ch
+    LEFT JOIN FETCH  ch.appUser au
+    WHERE au.id = :id
 """)
-    Optional<House> getHousesRentedByCustomer(@Param("id") int id);
+    List<House> getHousesRentedByCustomer(@Param("id") int id);
     @Query("""
 SELECT a FROM AppUser a
 LEFT JOIN FETCH a.customerHouseRented ch
