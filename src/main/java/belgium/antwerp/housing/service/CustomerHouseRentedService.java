@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface CustomerHouseRentedService {
-    Optional<House> getHousesRentedByCustomer(final int customerId);
+    List<House> getHousesRentedByCustomer(final int customerId);
     List<AppUser> getCustomerbyHouse (final int ownerId);
     Set<AppUser> getCustomersByHouseOwner(int ownerId);
 

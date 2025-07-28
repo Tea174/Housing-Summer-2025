@@ -1,7 +1,7 @@
 
 
 ###
-GET http://localhost:8080/api/appUser/owner/2
+GET http://localhost:8080/api/appUsers/2/houses
 Accept: application/json
 
 
@@ -26,3 +26,7 @@ Content-Type: application/json
 {
   "name": "fas"
 }
+
+###
+GET http://localhost:8080/api/houses/4/houses
+Accept: application/json

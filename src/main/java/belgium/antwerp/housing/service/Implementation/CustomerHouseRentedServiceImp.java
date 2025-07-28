@@ -20,7 +20,7 @@ public class CustomerHouseRentedServiceImp implements CustomerHouseRentedService
     private final OwnerHouseService ownerHouseService;
     private final Logger logger = Logger.getLogger(CustomerHouseRentedServiceImp.class.getName());
     @Override
-    public Optional<House> getHousesRentedByCustomer(final int customerId) {
+    public List<House> getHousesRentedByCustomer(final int customerId) {
         logger.info("Getting houses rented by customer with id: " + customerId);
         return customerHouseRentedRepo.getHousesRentedByCustomer(customerId);
     }
